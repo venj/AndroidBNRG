@@ -8,9 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity {
+
+    private Button mTrueButton;
+    private Button mFalseButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +28,19 @@ public class QuizActivity extends AppCompatActivity {
         fab.setOnClickListener((view) -> {
             //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     //.setAction("Action", null).show();
-            Toast.makeText(QuizActivity.this, "Hello", Toast.LENGTH_SHORT);
+            Toast.makeText(QuizActivity.this, R.string.toast_string, Toast.LENGTH_SHORT).show();
         });
+
+        mTrueButton = (Button)findViewById(R.id.true_button);
+        mTrueButton.setOnClickListener((view) -> {
+            Toast.makeText(QuizActivity.this, R.string.true_toast, Toast.LENGTH_SHORT).show();
+        });
+        mFalseButton = (Button)findViewById(R.id.false_button);
+        mFalseButton.setOnClickListener((view) -> {
+            Toast.makeText(QuizActivity.this, R.string.false_toast, Toast.LENGTH_SHORT).show();
+        });
+
+
     }
 
     @Override
