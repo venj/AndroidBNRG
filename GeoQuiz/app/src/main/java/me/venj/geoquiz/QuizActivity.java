@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,9 @@ public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
+    private Button mPrevButton;
+    private ImageButton mNextImageButton;
+    private ImageButton mPrevImageButton;
     private TextView mQuestionTextView;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[] {
@@ -64,17 +68,31 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener((view) -> {
             checkAnswer(true);
         });
+
         mFalseButton = (Button)findViewById(R.id.false_button);
         mFalseButton.setOnClickListener((view) -> {
             checkAnswer(false);
         });
+
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
+        mQuestionTextView.setOnClickListener((view) -> {
+            mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+            updateQuestion();
+        });
 
         updateQuestion();
 
-        mNextButton = (Button)findViewById(R.id.next_button);
-        mNextButton.setOnClickListener((view) -> {
+        //mNextButton = (Button)findViewById(R.id.next_button);
+        mNextImageButton = (ImageButton)findViewById(R.id.next_button);
+        mNextImageButton.setOnClickListener((view) -> {
             mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+            updateQuestion();
+        });
+
+        //mPrevButton = (Button)findViewById(R.id.previous_button);
+        mNextImageButton = (ImageButton)findViewById(R.id.previous_button);
+        mNextImageButton.setOnClickListener((view) -> {
+            mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
             updateQuestion();
         });
     }
