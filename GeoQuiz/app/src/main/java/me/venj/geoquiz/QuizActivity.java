@@ -34,14 +34,21 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
     private boolean mIsCheater = false;
+    private boolean isQuestionAnswered = false;
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_ISCHEAT = "is_cheat";
+    private static final String KEY_ISANSWERED = "is_answered";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getQuestion();
         mQuestionTextView.setText(question);
+        isQuestionAnswered = false;
+        if (mNextImageButton != null) {
+            mNextImageButton.setEnabled(false);
+        }
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -57,7 +64,8 @@ public class QuizActivity extends AppCompatActivity {
                 messageResId = R.string.false_toast;
             }
         }
-
+        isQuestionAnswered = true;
+        mNextImageButton.setEnabled(true);
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 
@@ -90,27 +98,44 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener((view) -> {
             mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+            mCurrentIndex--;
             updateQuestion();
         });
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheater = savedInstanceState.getBoolean(KEY_ISCHEAT, false);
+            isQuestionAnswered = savedInstanceState.getBoolean(KEY_ISANSWERED, false);
         }
-
-        updateQuestion();
 
         //mNextButton = (Button)findViewById(R.id.next_button);
         mNextImageButton = (ImageButton)findViewById(R.id.next_button);
         mNextImageButton.setOnClickListener((view) -> {
-            mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+            // Disable question rotation;
+            if (mCurrentIndex + 1 == mQuestionBank.length) {
+                Toast.makeText(QuizActivity.this, R.string.toast_already_last, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            //mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+            mCurrentIndex++;
             mIsCheater = false;
             updateQuestion();
         });
 
+        if (!isQuestionAnswered) {
+            mNextImageButton.setEnabled(false);
+        }
+
         //mPrevButton = (Button)findViewById(R.id.previous_button);
         mPrevImageButton = (ImageButton)findViewById(R.id.previous_button);
         mPrevImageButton.setOnClickListener((view) -> {
-            mCurrentIndex = mCurrentIndex - 1 >= 0 ? mCurrentIndex - 1 : mQuestionBank.length - (mCurrentIndex + 1);
+            // Disable question rotation;
+            if (mCurrentIndex == 0) {
+                Toast.makeText(QuizActivity.this, R.string.toast_already_first, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mCurrentIndex--;
+            //mCurrentIndex = mCurrentIndex - 1 >= 0 ? mCurrentIndex - 1 : mQuestionBank.length - (mCurrentIndex + 1);
             mIsCheater = false;
             updateQuestion();
         });
@@ -122,6 +147,8 @@ public class QuizActivity extends AppCompatActivity {
             //startActivity(i);
             startActivityForResult(i, REQUEST_CODE_CHEAT);
         });
+
+        updateQuestion();
     }
 
     @Override
@@ -165,6 +192,8 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean(KEY_ISCHEAT, mIsCheater);
+        savedInstanceState.putBoolean(KEY_ISANSWERED, isQuestionAnswered);
     }
 
     @Override
