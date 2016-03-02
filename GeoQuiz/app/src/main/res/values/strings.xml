@@ -16,6 +16,8 @@
     <string name="warning_text">Are you sure you want to do this?</string>
     <string name="show_answer_button">Show Answer</string>
     <string name="cheat_button">Cheat!</string>
+    <string name="answer_button">Answer</string>
+    <string name="api_level_text">API Level %1$d</string>
     <string name="judgement_toast">Cheating is wrong.</string>
     <string name="title_activity_cheat">Cheat</string>
     <string name="toast_already_first">No previous questions.</string>
